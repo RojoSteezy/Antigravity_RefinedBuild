@@ -1,0 +1,23 @@
+<div class="sec" id="s9">
+  <div class="sh"><div class="si">✅</div><div><div class="st">Consentement des personnes concernées</div><div class="ss">Section 8 — <span class="bdg bb">form_consentement</span></div></div></div>
+  <div class="blk">
+    <div class="fld">
+      <div class="fl">Consentement existe ? <span class="req">*</span></div>
+      <div class="pg" id="pg-consent">
+        <label class="po" onclick="selR('consent','Oui',this);tglConsent('Oui')"><div class="pd"></div>Oui / نعم</label>
+        <label class="po" onclick="selR('consent','Non',this);tglConsent('Non')"><div class="pd"></div>Non / لا</label>
+      </div>
+      <div class="em" id="em-consent">Champ obligatoire</div>
+    </div>
+    <div id="div-consent-oui" style="display:none;margin-top:12px">
+      <div class="g g2">
+        <div class="fld"><div class="fl">Méthode de consentement</div><textarea id="f_methode" rows="3" placeholder="ex: Note de consentement..."></textarea></div>
+        <div class="fld"><div class="fl">طريقة الموافقة <span class="tag tar">AR</span></div><textarea dir="rtl" id="f_methode_ar" rows="3"></textarea></div>
+      </div>
+    </div>
+    <div id="div-consent-non" style="display:none;margin-top:12px">
+      <div class="fld"><div class="fl">Précisez pourquoi pas de consentement</div><textarea id="f_pourquoi" rows="3"></textarea></div>
+    </div>
+  </div>
+  <div class="nf"><button class="btn bs" onclick="prevS('s9','s8')">← Précédent</button><button class="btn bp" onclick="nextS('s9','s10')">Suivant →</button></div>
+</div>

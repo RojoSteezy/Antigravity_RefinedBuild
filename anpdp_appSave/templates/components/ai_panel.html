@@ -1,0 +1,40 @@
+<!-- AI Assistant & Notes Side Panel -->
+<div id="ai-assistant-panel" class="ai-panel">
+  <div class="ai-panel-header">
+    <div class="ai-panel-title">
+      <span class="ai-icon">✨</span>
+      <span>Assistant IA & Notes</span>
+    </div>
+    <button class="ai-close-btn" onclick="toggleAI()">✕</button>
+  </div>
+
+  <div class="ai-panel-tabs">
+    <button class="ai-tab active" onclick="switchAITab('suggestions')">Suggestions</button>
+    <button class="ai-tab" onclick="switchAITab('notes')">Notes</button>
+  </div>
+
+  <!-- Suggestions Tab -->
+  <div id="ai-tab-suggestions" class="ai-tab-content active">
+    <div class="ai-kb-selector">
+      <label for="kb-type-sel">Modèle de traitement :</label>
+      <select id="kb-type-sel" onchange="loadKBSuggestions(this.value)">
+        <option value="">— Sélectionner un modèle —</option>
+        <!-- Options populated by JS -->
+      </select>
+    </div>
+    <div id="suggestions-list" class="ai-suggestions-list">
+      <div class="ai-empty-state">Choisissez un modèle pour voir les suggestions.</div>
+    </div>
+  </div>
+
+  <!-- Notes Tab -->
+  <div id="ai-tab-notes" class="ai-tab-content">
+    <textarea id="notes-area" class="ai-notes-area" placeholder="Prenez des notes ici..."></textarea>
+    <div id="notes-saved-at" class="ai-notes-status">Notes non sauvegardées</div>
+  </div>
+</div>
+
+<!-- Floating Toggle Button -->
+<button id="ai-toggle-btn" class="ai-toggle-btn" onclick="toggleAI()">
+  <span class="ai-toggle-icon">✨</span>
+</button>

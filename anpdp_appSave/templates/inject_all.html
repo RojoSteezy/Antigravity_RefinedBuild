@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Injection ANPDP — {{ company.name }}</title>
+<link rel="icon" type="image/png" href="https://www.keystone.tn/wp-content/uploads/2019/05/88-1.png">
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;600;700;800&family=Barlow+Condensed:wght@700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Barlow',sans-serif;background:#141414;color:#e0e0e0;min-height:100vh}
+.topbar{background:#1c1c1c;border-bottom:1px solid #2e2e2e;padding:0 28px;height:52px;display:flex;align-items:center;justify-content:space-between;position:relative}
+.topbar::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,#E8112D 30%,#E8112D 70%,transparent);opacity:.35}
+.tbtn{font-size:11px;font-family:'JetBrains Mono',monospace;padding:5px 12px;border-radius:2px;text-decoration:none;color:#555;border:1px solid #2e2e2e;transition:all .15s}.tbtn:hover{color:#888;border-color:#444}
+.main{max-width:860px;margin:0 auto;padding:32px 24px}
+.page-tag{font-size:9px;color:#E8112D;font-family:'JetBrains Mono',monospace;letter-spacing:.16em;text-transform:uppercase;margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.page-tag::before{content:'';width:14px;height:1px;background:#E8112D}
+.page-title{font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:900;color:#fff;text-transform:uppercase;margin-bottom:4px}
+.page-sub{font-size:11px;color:#555;font-family:'JetBrains Mono',monospace;margin-bottom:24px}
+.card{background:#1c1c1c;border:1px solid #2e2e2e;border-radius:2px;padding:18px 22px;margin-bottom:14px}
+.card-title{font-size:9.5px;font-weight:700;color:#E8112D;font-family:'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.card-title::before{content:'';width:2px;height:12px;background:#E8112D}
+/* Cookie inputs */
+.field-row{display:flex;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+.field{flex:1;min-width:200px}
+.field label{display:block;font-size:8.5px;font-weight:700;color:#444;letter-spacing:.12em;text-transform:uppercase;font-family:'JetBrains Mono',monospace;margin-bottom:5px}
+.field input{width:100%;padding:9px 11px;background:#0a0a0a;border:1px solid #2e2e2e;color:#e0e0e0;font-family:'JetBrains Mono',monospace;font-size:11.5px;border-radius:2px;outline:none;transition:border-color .15s}
+.field input:focus{border-color:#E8112D}
+.field input::placeholder{color:#333}
+/* Traitement table */
+.t-table{width:100%;border-collapse:collapse}
+.t-table th{font-size:8.5px;font-weight:700;color:#333;font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:.1em;padding:8px 10px;border-bottom:1px solid #252525;text-align:left}
+.t-table td{padding:9px 10px;border-bottom:1px solid #1e1e1e;font-size:12px;vertical-align:middle}
+.t-table tr:last-child td{border-bottom:none}
+.t-table tr:hover td{background:rgba(255,255,255,.02)}
+.chk{width:16px;height:16px;cursor:pointer;accent-color:#E8112D}
+.status-dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:6px}
+.status-badge{font-size:9px;font-family:'JetBrains Mono',monospace;font-weight:700;padding:2px 7px;border-radius:1px}
+.s-brouillon{color:#7a5500;background:rgba(90,64,0,.15)}
+.s-pret{color:#1a5fa0;background:rgba(0,58,122,.15)}
+.s-soumis{color:#00B074;background:rgba(0,176,116,.12)}
+/* Result column */
+.res-cell{font-size:10px;font-family:'JetBrains Mono',monospace;min-width:160px}
+.res-pending{color:#333}
+.res-running{color:#d97706}
+.res-ok{color:#00B074}
+.res-err{color:#E8112D;word-break:break-all}
+/* Action bar */
+.action-bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:16px}
+.btn-primary{padding:9px 20px;background:#E8112D;border:none;color:#fff;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;border-radius:2px;transition:background .15s}
+.btn-primary:hover{background:#ff1f3a}
+.btn-primary:disabled{opacity:.4;cursor:not-allowed}
+.btn-sec{padding:8px 16px;background:transparent;border:1px solid #2e2e2e;color:#555;font-family:'JetBrains Mono',monospace;font-size:11px;cursor:pointer;border-radius:2px;transition:all .15s}
+.btn-sec:hover{color:#888;border-color:#444}
+.progress-bar{height:3px;background:#1a1a1a;border-radius:0;margin-top:14px;overflow:hidden;display:none}
+.progress-fill{height:100%;background:#E8112D;transition:width .3s;width:0%}
+.summary{font-size:11px;font-family:'JetBrains Mono',monospace;color:#555;margin-top:8px;display:none}
+.warn-box{background:rgba(217,119,6,.08);border:1px solid rgba(217,119,6,.3);border-left:3px solid #d97706;padding:11px 14px;font-size:11px;color:#a07020;font-family:'JetBrains Mono',monospace;line-height:1.6;margin-bottom:14px;border-radius:2px}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <a href="/"><img src="https://www.keystone.tn/wp-content/uploads/2019/05/Key-W-logo.png" alt="KeyStone" style="height:42px;width:auto;display:block"></a>
+  <a href="/company/{{ company.id }}" class="tbtn">← {{ company.name }}</a>
+</div>
+
+<div class="main">
+  <div class="page-tag">Injection ANPDP</div>
+  <div class="page-title">Envoyer vers le portail ANPDP</div>
+  <div class="page-sub">{{ company.name }} · {{ traitements|length }} traitement{% if traitements|length!=1 %}s{% endif %}</div>
+
+  <div class="warn-box">
+    ⚠ <strong>Important :</strong> Le serveur Railway ne peut pas toujours atteindre portail.anpdp.dz directement (timeout réseau). Si l'injection échoue avec "Connection timed out", utilisez l'option <strong>Export JSON local</strong> ci-dessous et lancez l'injection depuis votre machine avec votre script local.
+  </div>
+
+  <!-- Local export option -->
+  <div class="card">
+    <div class="card-title">Option 1 · Export JSON pour injection locale</div>
+    <p style="font-size:12px;color:#666;margin-bottom:12px;line-height:1.6">Téléchargez les données de tous les traitements sélectionnés en JSON, puis lancez votre script <code style="background:#0a0a0a;padding:2px 6px;border-radius:2px;font-family:'JetBrains Mono',monospace;font-size:11px">anpdp_server.py</code> ou <code style="background:#0a0a0a;padding:2px 6px;border-radius:2px;font-family:'JetBrains Mono',monospace;font-size:11px">SendData.py</code> localement.</p>
+    <button class="btn-sec" style="border-color:rgba(0,176,116,.4);color:#00B074" onclick="exportLocalJSON()">📥 Télécharger JSON (traitements cochés)</button>
+  </div>
+
+  <!-- Direct injection option -->
+  <div class="card">
+    <div class="card-title">Option 2 · Injection directe depuis le serveur</div>
+    <p style="font-size:12px;color:#666;margin-bottom:12px;line-height:1.6">Récupérez vos cookies depuis le portail ANPDP (F12 → Application → Cookies → portail.anpdp.dz).</p>
+    <div class="field-row">
+      <div class="field">
+        <label>PHPSESSID (cookie)</label>
+        <input type="text" id="inp-sess" placeholder="Coller la valeur du cookie PHPSESSID">
+      </div>
+      <div class="field">
+        <label>cookiesession1 (cookie)</label>
+        <input type="text" id="inp-cook" placeholder="Coller la valeur du cookie cookiesession1">
+      </div>
+    </div>
+  </div>
+
+  <!-- Traitement selection -->
+  <div class="card">
+    <div class="card-title">Traitements à envoyer</div>
+    <div class="action-bar">
+      <button class="btn-sec" onclick="selectAll(true)">✓ Tout sélectionner</button>
+      <button class="btn-sec" onclick="selectAll(false)">✗ Tout désélectionner</button>
+      <button class="btn-sec" onclick="selectByStatus('pret')">Sélectionner les Prêts</button>
+      <div style="flex:1"></div>
+      <button class="btn-primary" id="btn-inject" onclick="startInjection()">🚀 Lancer l'injection</button>
+    </div>
+
+    <div class="progress-bar" id="progress-bar">
+      <div class="progress-fill" id="progress-fill"></div>
+    </div>
+    <div class="summary" id="summary"></div>
+
+    <table class="t-table">
+      <thead>
+        <tr>
+          <th style="width:36px"><input type="checkbox" class="chk" id="chk-all" onchange="selectAll(this.checked)"></th>
+          <th>Traitement</th>
+          <th>Statut actuel</th>
+          <th>Résultat envoi</th>
+        </tr>
+      </thead>
+      <tbody id="t-body">
+        {% for t in traitements %}
+        <tr id="row-{{ t.id }}">
+          <td><input type="checkbox" class="chk row-chk" data-id="{{ t.id }}" {% if t.status == 'pret' %}checked{% endif %}></td>
+          <td style="font-weight:600;color:#d0d0d0">{{ t.name }}</td>
+          <td>
+            <span class="status-badge s-{{ t.status }}">
+              {% if t.status=='brouillon' %}Brouillon{% elif t.status=='pret' %}Prêt{% else %}Soumis{% endif %}
+            </span>
+          </td>
+          <td class="res-cell" id="res-{{ t.id }}"><span class="res-pending">—</span></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+function exportLocalJSON(){
+  const selected = [...document.querySelectorAll('.row-chk:checked')].map(c=>parseInt(c.dataset.id));
+  if(!selected.length){ alert('Sélectionnez au moins un traitement.'); return; }
+  window.location = `/company/{{ company.id }}/export/json-bulk?ids=${selected.join(',')}`;
+}
+
+function selectAll(val){
+  document.querySelectorAll('.row-chk').forEach(c=>c.checked=val);
+  document.getElementById('chk-all').checked=val;
+}
+function selectByStatus(status){
+  document.querySelectorAll('.row-chk').forEach(c=>{
+    const row=c.closest('tr');
+    const badge=row.querySelector('.status-badge');
+    c.checked = badge && badge.classList.contains('s-'+status);
+  });
+}
+
+async function startInjection(){
+  const sess  = document.getElementById('inp-sess').value.trim();
+  const cook  = document.getElementById('inp-cook').value.trim();
+
+  if(!sess || !cook){
+    alert('Veuillez renseigner les deux cookies ANPDP.');
+    return;
+  }
+
+  const selected = [...document.querySelectorAll('.row-chk:checked')].map(c=>parseInt(c.dataset.id));
+  if(!selected.length){
+    alert('Sélectionnez au moins un traitement.');
+    return;
+  }
+
+  const btn = document.getElementById('btn-inject');
+  btn.disabled = true;
+  btn.textContent = 'Injection en cours...';
+
+  const bar = document.getElementById('progress-bar');
+  const fill = document.getElementById('progress-fill');
+  const sumEl = document.getElementById('summary');
+  bar.style.display='block';
+  sumEl.style.display='block';
+
+  let done=0, ok=0, fail=0;
+  const total=selected.length;
+
+  for(const tid of selected){
+    const resEl = document.getElementById('res-'+tid);
+    resEl.innerHTML = '<span class="res-running">⏳ Envoi en cours...</span>';
+
+    try {
+      const resp = await fetch(`/api/inject/traitement/${tid}`, {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({
+          cookies: {PHPSESSID: sess, cookiesession1: cook}
+        })
+      });
+      const j = await resp.json();
+      done++;
+      fill.style.width = Math.round(done/total*100)+'%';
+
+      if(j.ok){
+        ok++;
+        resEl.innerHTML = '<span class="res-ok">✅ Envoyé — ID: '+(j.declaration_id||'OK')+'</span>';
+        const badge = document.querySelector(`#row-${tid} .status-badge`);
+        if(badge){ badge.className='status-badge s-soumis'; badge.textContent='Soumis'; }
+      } else {
+        fail++;
+        const logsHtml = (j.logs||[]).length
+          ? `<div style="font-size:9px;color:#555;margin-top:4px;line-height:1.5">${(j.logs||[]).slice(-3).join('<br>')}</div>`
+          : '';
+        resEl.innerHTML = `<span class="res-err">❌ ${j.error||'Erreur inconnue'}</span>${logsHtml}`;
+      }
+    } catch(e) {
+      done++; fail++;
+      fill.style.width = Math.round(done/total*100)+'%';
+      document.getElementById('res-'+tid).innerHTML=`<span class="res-err">❌ ${e.message}</span>`;
+    }
+
+    sumEl.textContent = `${done}/${total} traités · ${ok} réussis · ${fail} échecs`;
+    // Small delay between requests
+    await new Promise(r=>setTimeout(r,800));
+  }
+
+  btn.disabled = false;
+  btn.textContent = '🚀 Lancer l\'injection';
+  sumEl.textContent = `✅ Terminé — ${ok}/${total} réussis · ${fail} échecs`;
+}
+</script>
+</body>
+</html>

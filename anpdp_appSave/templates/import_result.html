@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Import — {{ company.name }}</title>
+<link rel="icon" type="image/png" href="https://www.keystone.tn/wp-content/uploads/2019/05/88-1.png">
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;600;700;800&family=Barlow+Condensed:wght@700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Barlow',sans-serif;background:#141414;color:#e0e0e0;min-height:100vh}
+.topbar{background:#1c1c1c;border-bottom:1px solid #2e2e2e;padding:0 28px;height:52px;display:flex;align-items:center;justify-content:space-between;position:relative}
+.topbar::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,#E8112D 30%,#E8112D 70%,transparent);opacity:.35}
+.tbtn{font-size:11px;font-family:'JetBrains Mono',monospace;padding:5px 12px;border-radius:2px;text-decoration:none;transition:all .15s}
+.tbtn-back{color:#555;border:1px solid #2e2e2e}.tbtn-back:hover{color:#888}
+.tbtn-open{background:#E8112D;color:#fff;border:none;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:5px 14px;cursor:pointer;border-radius:2px;text-decoration:none}
+.tbtn-open:hover{background:#ff1f3a}
+.main{max-width:800px;margin:0 auto;padding:36px 24px}
+.banner{background:rgba(0,176,116,.08);border:1px solid rgba(0,176,116,.3);border-left:3px solid #00B074;padding:14px 18px;margin-bottom:24px;display:flex;align-items:center;gap:12px}
+.banner-icon{font-size:22px}
+.banner-title{font-size:14px;font-weight:700;color:#fff}
+.banner-sub{font-size:10.5px;color:#555;font-family:'JetBrains Mono',monospace;margin-top:2px}
+.t-block{background:#1c1c1c;border:1px solid #2e2e2e;border-radius:2px;margin-bottom:14px;overflow:hidden}
+.t-hdr{padding:12px 18px;border-bottom:1px solid #222;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.t-name{font-size:13.5px;font-weight:700;color:#fff}
+.t-actions{display:flex;gap:8px;align-items:center;flex-shrink:0}
+.t-log{padding:12px 18px}
+.log-item{display:flex;align-items:flex-start;gap:8px;padding:5px 0;border-bottom:1px solid #1a1a1a}
+.log-item:last-child{border-bottom:none}
+.log-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0;margin-top:5px}
+.log-text{font-size:10.5px;color:#666;font-family:'JetBrains Mono',monospace;line-height:1.5}
+.bot-acts{display:flex;gap:10px;margin-top:20px}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <a href="/"><img src="https://www.keystone.tn/wp-content/uploads/2019/05/Key-W-logo.png" alt="KeyStone" style="height:42px;width:auto;display:block"></a>
+  <a href="/company/{{ company.id }}" class="tbtn tbtn-back">← {{ company.name }}</a>
+</div>
+<div class="main">
+  <div class="banner">
+    <div class="banner-icon">✅</div>
+    <div>
+      <div class="banner-title">{{ results|length }} traitement{% if results|length!=1 %}s{% endif %} importé{% if results|length!=1 %}s{% endif %} avec succès</div>
+      <div class="banner-sub">{{ company.name }} · Statut: Brouillon</div>
+    </div>
+  </div>
+
+  {% for r in results %}
+  <div class="t-block">
+    <div class="t-hdr">
+      <div class="t-name">{{ r.name }}</div>
+      <div class="t-actions">
+        {% if r.id %}
+        <a href="/company/{{ company.id }}/traitement/{{ r.id }}" class="tbtn-open">Ouvrir →</a>
+        {% else %}
+        <span style="font-size:10px;color:#E8112D;font-family:'JetBrains Mono',monospace">Échec</span>
+        {% endif %}
+      </div>
+    </div>
+    <div class="t-log">
+      {% for entry in r.log %}
+      <div class="log-item">
+        <div class="log-dot" style="background:{% if '✅' in entry %}#00B074{% elif '❌' in entry %}#E8112D{% else %}#d97706{% endif %}"></div>
+        <div class="log-text">{{ entry }}</div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endfor %}
+
+  <div class="bot-acts">
+    <a href="/company/{{ company.id }}" class="tbtn tbtn-back">← Retour à {{ company.name }}</a>
+    <a href="/company/{{ company.id }}/import" class="tbtn tbtn-back">Importer un autre fichier</a>
+  </div>
+</div>
+</body>
+</html>
