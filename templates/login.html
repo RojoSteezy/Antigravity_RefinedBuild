@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/png" href="https://www.keystone.tn/wp-content/uploads/2019/05/88-1.png"><rect width='40' height='40' rx='2' fill='%23E8112D'/><path d='M9 9h5v10.5L22 9h7l-9 11.5L29 31h-7L9 20v11H4V9h5z' fill='white'/></svg>">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KeyStone — ANPDP Registre</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;600;700;800;900&family=Barlow+Condensed:wght@700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Barlow',sans-serif;background:#252525;min-height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden}
+canvas#net{position:fixed;inset:0;z-index:1;opacity:.4}
+.orb{position:fixed;border-radius:50%;filter:blur(100px);pointer-events:none;z-index:0}
+.o1{width:500px;height:500px;background:rgba(232,17,45,.06);top:-150px;right:-150px}
+.o2{width:350px;height:350px;background:rgba(232,17,45,.04);bottom:-80px;left:-80px}
+.wrap{position:relative;z-index:10;width:400px}
+.logo{display:flex;align-items:center;gap:12px;margin-bottom:36px;justify-content:center}
+.logo-name{font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:900;color:#fff;letter-spacing:.04em}
+.logo-name span{color:#E8112D}
+.logo-sub{font-size:9px;font-weight:600;color:#444;letter-spacing:.18em;text-transform:uppercase;font-family:'JetBrains Mono',monospace;margin-top:3px}
+.card{background:#222;border:1px solid #333333;border-radius:2px;padding:40px;position:relative;overflow:hidden}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,#E8112D 35%,#E8112D 65%,transparent)}
+.card-title{font-size:22px;font-weight:800;color:#fff;margin-bottom:4px}
+.card-sub{font-size:10.5px;color:#444;font-family:'JetBrains Mono',monospace;letter-spacing:.06em;margin-bottom:28px}
+.err{background:rgba(232,17,45,.08);border:1px solid rgba(232,17,45,.3);color:#E8112D;border-radius:2px;padding:10px 14px;font-size:12px;margin-bottom:18px;font-family:'JetBrains Mono',monospace}
+label{display:block;font-size:9.5px;font-weight:700;color:#444;letter-spacing:.14em;text-transform:uppercase;font-family:'JetBrains Mono',monospace;margin-bottom:7px}
+input[type=password]{width:100%;padding:12px 14px;background:#1c1c1c;border:1px solid #252525;color:#fff;font-family:'Barlow',sans-serif;font-size:14px;border-radius:2px;outline:none;transition:border-color .2s,box-shadow .2s}
+input[type=password]::placeholder{color:#666}
+input[type=password]:focus{border-color:#E8112D;box-shadow:0 0 0 3px rgba(232,17,45,.1)}
+button{width:100%;margin-top:18px;padding:13px;background:#E8112D;border:none;color:#fff;font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;border-radius:2px;transition:background .18s}
+button:hover{background:#ff1f3a}
+.footer{margin-top:20px;text-align:center;font-size:9.5px;color:#666;font-family:'JetBrains Mono',monospace;letter-spacing:.06em}
+</style>
+</head>
+<body>
+<div class="orb o1"></div><div class="orb o2"></div>
+<canvas id="net"></canvas>
+<div class="wrap">
+  <div class="logo">
+    <img src="https://www.keystone.tn/wp-content/uploads/2019/05/Key-W-logo.png" alt="KeyStone" style="height:44px;width:auto;display:block">
+    <div>
+      
+      <div class="logo-sub">Algeria · ANPDP Platform</div>
+    </div>
+  </div>
+  <div class="card">
+    {% if err %}<div class="err">⚠ {{ err }}</div>{% endif %}
+    <div class="card-title">Accès sécurisé</div>
+    <div class="card-sub">REGISTRE DES TRAITEMENTS · LOI 18-07</div>
+    <form method="POST">
+      <label>Mot de passe</label>
+      <input type="password" name="password" placeholder="••••••••••••" autofocus required>
+      <button type="submit">Accéder →</button>
+    </form>
+  </div>
+  <div class="footer">KEYSTONE CORPORATION · Centre des Affaires Mohammadia Mall · Alger</div>
+</div>
+<script>
+const c=document.getElementById('net'),x=c.getContext('2d');
+let w,h,p=[];
+function rs(){w=c.width=innerWidth;h=c.height=innerHeight;p=[];for(let i=0;i<70;i++)p.push({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-.5)*.35,vy:(Math.random()-.5)*.35})}
+function dr(){x.clearRect(0,0,w,h);p.forEach(a=>{a.x+=a.vx;a.y+=a.vy;if(a.x<0||a.x>w)a.vx*=-1;if(a.y<0||a.y>h)a.vy*=-1});
+for(let i=0;i<p.length;i++)for(let j=i+1;j<p.length;j++){const dx=p[i].x-p[j].x,dy=p[i].y-p[j].y,d=Math.sqrt(dx*dx+dy*dy);if(d<140){x.beginPath();x.moveTo(p[i].x,p[i].y);x.lineTo(p[j].x,p[j].y);x.strokeStyle=`rgba(232,17,45,${.18*(1-d/140)})`;x.lineWidth=.4;x.stroke()}}
+p.forEach(a=>{x.beginPath();x.arc(a.x,a.y,1.5,0,Math.PI*2);x.fillStyle='rgba(232,17,45,.6)';x.fill()});requestAnimationFrame(dr)}
+addEventListener('resize',rs);rs();dr();
+</script>
+</body>
+</html>

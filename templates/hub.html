@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KeyStone ANPDP — Hub</title>
+<link rel="icon" type="image/png" href="https://www.keystone.tn/wp-content/uploads/2019/05/88-1.png">
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&family=Barlow+Condensed:wght@700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Barlow',sans-serif;background:#252525;color:#e0e0e0;min-height:100vh}
+
+.topbar{background:#1c1c1c;border-bottom:1px solid #2e2e2e;padding:0 28px;height:52px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;position:relative}
+.topbar::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,#E8112D 30%,#E8112D 70%,transparent);opacity:.35}
+.brand{display:flex;align-items:center;gap:12px}
+.brand-sub{font-size:9px;color:#666;font-family:'JetBrains Mono',monospace;letter-spacing:.12em;text-transform:uppercase}
+.tright{display:flex;gap:8px;align-items:center}
+.tbtn{font-size:11px;font-family:'JetBrains Mono',monospace;padding:5px 12px;border-radius:2px;text-decoration:none;font-weight:500;transition:all .15s}
+.tbtn-lib{color:#E8112D;border:1px solid rgba(232,17,45,.3);background:rgba(232,17,45,.06)}.tbtn-lib:hover{background:rgba(232,17,45,.14)}
+.tbtn-out{color:#444;border:1px solid #333333}.tbtn-out:hover{color:#777;border-color:#333}
+
+.main{max-width:1100px;margin:0 auto;padding:28px 28px}
+
+/* Top bar inside main */
+.main-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:10px}
+.main-hdr-left{display:flex;align-items:center;gap:10px}
+.page-tag{font-size:9px;color:#E8112D;font-family:'JetBrains Mono',monospace;letter-spacing:.16em;text-transform:uppercase;display:flex;align-items:center;gap:6px}
+.page-tag::before{content:'';width:14px;height:1px;background:#E8112D}
+.search{background:#1c1c1c;border:1px solid #333333;padding:7px 12px;font-size:11px;color:#666;font-family:'JetBrains Mono',monospace;width:200px;outline:none;border-radius:2px;transition:border-color .15s}
+.search:focus{border-color:#E8112D;color:#aaa}
+.search::placeholder{color:#555}
+
+/* New company form */
+.new-co{background:#1c1c1c;border:1px solid #2e2e2e;padding:12px 18px;margin-bottom:20px;display:flex;gap:10px;align-items:center}
+.new-co-lbl{font-size:9px;font-family:'JetBrains Mono',monospace;color:#E8112D;letter-spacing:.14em;text-transform:uppercase;font-weight:700;white-space:nowrap;flex-shrink:0}
+.new-co input{flex:1;padding:9px 12px;background:#252525;border:1px solid #333333;color:#e0e0e0;font-family:'Barlow',sans-serif;font-size:13px;border-radius:2px;outline:none;transition:border-color .15s}
+.new-co input:focus{border-color:#E8112D}
+.new-co input::placeholder{color:#333333}
+.btn-cr{padding:9px 20px;background:#E8112D;border:none;color:#fff;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;border-radius:2px;white-space:nowrap;flex-shrink:0;transition:background .15s}
+.btn-cr:hover{background:#ff1f3a}
+
+/* Company grid */
+.co-grid{display:grid;grid-template-columns:1fr;gap:1px;background:#252525;border:1px solid #252525;border-radius:2px;overflow:hidden}
+
+.co-card{background:#1c1c1c;padding:18px 20px;text-decoration:none;color:inherit;display:block;transition:background .12s;border-left:2px solid transparent;cursor:pointer}
+.co-card:hover{background:#222;border-left-color:#E8112D}
+
+.co-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px}
+.co-name{font-size:14px;font-weight:800;color:#fff;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif;letter-spacing:.04em;line-height:1.2}
+.co-nit{font-size:9px;font-family:'JetBrains Mono',monospace;color:#555;margin-top:3px}
+.co-arrow{font-size:14px;color:#E8112D;opacity:0;transition:opacity .15s;flex-shrink:0;margin-top:2px}
+.co-card:hover .co-arrow{opacity:1}
+
+/* Traitement list inside card */
+.co-traits{display:flex;flex-direction:column;gap:4px;margin-bottom:12px}
+.t-row{display:flex;align-items:center;gap:7px;padding:5px 8px;background:#222;border:1px solid #252525;border-radius:1px}
+.t-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+.t-name{font-size:11.5px;color:#888;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.t-status{font-size:8.5px;font-family:'JetBrains Mono',monospace;font-weight:700;white-space:nowrap}
+.s-brouillon{color:#7a5500}
+.s-pret{color:#1a5fa0}
+.s-soumis{color:#E8112D}
+
+.co-more{font-size:9.5px;color:#666;font-family:'JetBrains Mono',monospace;padding:4px 8px}
+
+.co-footer{display:flex;align-items:center;justify-content:space-between;padding-top:10px;border-top:1px solid #252525;margin-top:4px}
+.co-count{font-size:9px;color:#666;font-family:'JetBrains Mono',monospace}
+.co-bar{flex:1;height:2px;background:#2a2a2a;margin:0 10px}
+.co-bar-fill{height:100%;background:#E8112D;transition:width .3s}
+.co-pct{font-size:9px;color:#E8112D;font-family:'JetBrains Mono',monospace}
+
+/* Empty */
+.empty{text-align:center;padding:80px 20px;color:#2e2e2e;grid-column:1/-1}
+.empty-n{font-family:'Barlow Condensed',sans-serif;font-size:72px;font-weight:900;color:#1a1a1a}
+.empty-t{font-size:10px;color:#333333;font-family:'JetBrains Mono',monospace;margin-top:6px}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">
+    <img src="https://www.keystone.tn/wp-content/uploads/2019/05/Key-W-logo.png" alt="KeyStone" style="height:42px;width:auto;display:block">
+    <div class="brand-sub">ANPDP · Registre des Traitements</div>
+  </div>
+  <div class="tright">
+    <a href="/kb" class="tbtn tbtn-lib">📚 Bibliothèque</a>
+    <a href="/logout" class="tbtn tbtn-out">Déconnexion</a>
+  </div>
+</div>
+
+<div class="main">
+  <div class="main-hdr">
+    <div class="main-hdr-left">
+      <div class="page-tag">{{ companies|length }} société{% if companies|length!=1 %}s{% endif %}</div>
+    </div>
+    <input class="search" type="text" placeholder="🔍  Rechercher..." oninput="filterCo(this.value)">
+  </div>
+
+  <!-- New company -->
+  <form action="/company/new" method="POST" class="new-co" enctype="multipart/form-data">
+    <div class="new-co-lbl">+ Société</div>
+    <input type="text" name="name" placeholder="Nom de la société (ex: PROSERVE EURL)" required>
+    <input type="text" name="nit" value=" " style="display:none">
+    <label style="font-size:9px;font-family:'JetBrains Mono',monospace;color:#444;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap;cursor:pointer;display:flex;align-items:center;gap:6px;flex-shrink:0">
+      <span style="padding:8px 12px;background:#222;border:1px solid #333333;border-radius:2px;transition:border-color .15s" onmouseover="this.style.borderColor='#E8112D'" onmouseout="this.style.borderColor='#333333'">🖼 Logo</span>
+      <input type="file" name="logo" accept="image/*" style="display:none" onchange="this.previousElementSibling.textContent='✓ '+this.files[0].name.slice(0,16)">
+    </label>
+    <button type="submit" class="btn-cr">Créer →</button>
+  </form>
+
+  <!-- Company grid -->
+  {% if companies %}
+  <div class="co-grid" id="co-grid">
+    {% for c in companies %}
+    {% set pct = [stats[c.id].soumis * 100 // [stats[c.id].total,1]|max, 100]|min %}
+    <a href="/company/{{ c.id }}" class="co-card" data-name="{{ c.name|lower }}">
+      <div class="co-top">
+        <div style="display:flex;align-items:center;gap:10px">
+          {% if c.logo_path %}
+          <img src="{{ c.logo_path }}" alt="{{ c.name }}" style="width:32px;height:32px;object-fit:contain;border-radius:2px;background:#2a2a2a;flex-shrink:0;padding:2px">
+          {% else %}
+          <div style="width:32px;height:32px;background:#2a2a2a;border:1px solid #333333;border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:13px;color:#666;flex-shrink:0;font-family:'Barlow Condensed',sans-serif;font-weight:900">{{ c.name[0] }}</div>
+          {% endif %}
+          <div>
+            <div class="co-name">{{ c.name }}</div>
+            <div class="co-nit">NIT · {{ c.nit }}</div>
+          </div>
+        </div>
+        <div class="co-arrow">→</div>
+      </div>
+
+      <!-- Traitement names -->
+      <div class="co-traits">
+        {% for t in c.traitements %}
+        <div class="t-row">
+          <div class="t-dot" style="background:{% if t.status=='soumis' %}#E8112D{% elif t.status=='pret' %}#1a5fa0{% else %}#7a5500{% endif %}"></div>
+          <div class="t-name">{{ t.name }}</div>
+          <div class="t-status s-{{ t.status }}">{% if t.status=='brouillon' %}Broui.{% elif t.status=='pret' %}Prêt{% else %}Soumis{% endif %}</div>
+        </div>
+        {% endfor %}
+        {% if c.traitements|length == 0 %}
+        <div style="font-size:10px;color:#333333;font-family:'JetBrains Mono',monospace;padding:6px 8px">Aucun traitement</div>
+        {% endif %}
+      </div>
+
+      <!-- Footer bar -->
+      <div class="co-footer">
+        <div class="co-count">{{ stats[c.id].total }} traitement{% if stats[c.id].total!=1 %}s{% endif %}</div>
+        <div class="co-bar"><div class="co-bar-fill" style="width:{{ pct }}%"></div></div>
+        <div class="co-pct">{{ pct }}% soumis</div>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="co-grid">
+    <div class="empty">
+      <div class="empty-n">0.</div>
+      <div class="empty-t">Aucune société · Créez la première ci-dessus</div>
+    </div>
+  </div>
+  {% endif %}
+</div>
+
+<script>
+function filterCo(q){
+  q=q.toLowerCase().trim();
+  document.querySelectorAll('.co-card').forEach(el=>{
+    el.style.display=(!q||el.dataset.name.includes(q))?'block':'none';
+  });
+}
+</script>
+</body>
+</html>

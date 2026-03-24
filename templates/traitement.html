@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/png" href="https://www.keystone.tn/wp-content/uploads/2019/05/88-1.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ traitement.name }} — {{ company.name }} — ANPDP</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/traitement.css') }}">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head>
+<body>
+
+<!-- WEB APP TOPBAR -->
+<div class="webapp-topbar">
+  <div class="wb">
+    <a href="/"><img src="https://www.keystone.tn/wp-content/uploads/2019/05/Key-W-logo.png" alt="KeyStone" style="height:44px;width:auto;display:block"></a>
+    <div>
+      <div class="wtt" id="t-name-display" style="font-family:'Barlow',sans-serif;font-weight:700;color:#fff">{{ traitement.name }}</div>
+      <div class="wsb">{{ company.name }} · NIT {{ company.nit }}</div>
+    </div>
+  </div>
+  <div class="wac">
+    <div class="save-bar">
+      <span class="save-status" id="save-status">💾 Chargé</span>
+      <select class="status-sel" id="status-sel" onchange="changeStatus(this.value)">
+        <option value="brouillon" {% if traitement.status == 'brouillon' %}selected{% endif %}>📝 Brouillon</option>
+        <option value="pret" {% if traitement.status == 'pret' %}selected{% endif %}>✅ Prêt</option>
+        <option value="soumis" {% if traitement.status == 'soumis' %}selected{% endif %}>🚀 Soumis</option>
+      </select>
+      <button class="btn-save" onclick="saveNow()">💾 Sauvegarder</button>
+    </div>
+    <a href="/company/{{ company.id }}" class="abk">← Retour</a>
+  </div>
+</div>
+
+<div class="pb"><div class="pf" id="pf" style="width:7%"></div></div>
+
+<div class="lay">
+  <div class="sb">
+    <div class="slb">Formulaire ANPDP</div>
+    <div class="ni active" onclick="goFree('s1')" id="nav-s1"><div class="nb">1</div>Informations traitement</div>
+    <div class="ni" onclick="goFree('s2')" id="nav-s2"><div class="nb">2</div>Sous-traitements</div>
+    <div class="ni" onclick="goFree('s3')" id="nav-s3"><div class="nb">3</div>Données collectées</div>
+    <div class="ni" onclick="goFree('s4')" id="nav-s4"><div class="nb">4</div>Catégories données</div>
+    <div class="ni" onclick="goFree('s5')" id="nav-s5"><div class="nb">5</div>Conservation</div>
+    <div class="ni" onclick="goFree('s6')" id="nav-s6"><div class="nb">6</div>Sécurité</div>
+    <div class="ni" onclick="goFree('s7')" id="nav-s7"><div class="nb">7</div>Interconnexion</div>
+    <div class="ni" onclick="goFree('s8')" id="nav-s8"><div class="nb">8</div>Transfert étranger</div>
+    <div class="ni" onclick="goFree('s9')" id="nav-s9"><div class="nb">9</div>Consentement</div>
+    <div class="ni" onclick="goFree('s10')" id="nav-s10"><div class="nb">10</div>Droits personnes</div>
+    <div class="ni" onclick="goFree('exp')" id="nav-exp"><div class="nb">⬇</div>Export &amp; Cookies</div>
+  </div>
+
+  <div class="cnt">
+    <!-- Section 1: Informations sur le traitement -->
+    <div class="sec active" id="s1">
+      <div class="sh"><div class="si">🗂️</div><div><div class="st">Informations sur le traitement</div><div class="ss">Section 1 — <span class="bdg bb">form_trait</span></div></div></div>
+      <div class="blk">
+        <div class="bt">Dénomination &amp; Type</div>
+        <div class="g g2">
+          <div class="fld">
+            <div class="fl">Dénomination du traitement <span class="req">*</span> <span class="tag tlm">3–200 car.</span></div>
+            <input type="text" id="f_denom" maxlength="200" placeholder="ex: Gestion des candidatures" oninput="vc(this,200);live(this,'denom')">
+            <div class="cc" id="cc-f_denom">0/200</div>
+            <div class="em" id="em-f_denom">3 à 200 caractères requis</div>
+          </div>
+          <div class="fld">
+            <div class="fl">اسم المعالجة <span class="tag tar">AR</span> <span class="req">*</span></div>
+            <input type="text" dir="rtl" id="f_denom_ar" maxlength="200" oninput="live(this,'denom_ar')">
+            <div class="em" id="em-f_denom_ar">نص عربي مطلوب</div>
+          </div>
+          <div class="fld">
+            <div class="fl">Type du traitement <span class="req">*</span></div>
+            <div class="pg" id="pg-type_trait">
+              <label class="po" onclick="tck(this,'type_trait','Manuel')"><div class="ps"></div>Manuel</label>
+              <label class="po" onclick="tck(this,'type_trait','Automatique')"><div class="ps"></div>Automatique</label>
+            </div>
+            <div class="em" id="em-type_trait">Cochez au moins un type</div>
+          </div>
+          <div class="fld">
+            <div class="fl">Date de mise en œuvre <span class="req">*</span></div>
+            <input type="date" id="f_date" oninput="live(this,'date')">
+            <div class="em" id="em-f_date">Date obligatoire</div>
+          </div>
+        </div>
+      </div>
+      <div class="blk">
+        <div class="bt">Finalité &amp; Cadre légal</div>
+        <div class="g g2">
+          <div class="fld">
+            <div class="fl">Finalité du traitement <span class="req">*</span></div>
+            <div style="position:relative">
+              <input type="text" id="f_but" maxlength="200" oninput="live(this,'but')">
+              <button class="ai-draft-btn" onclick="draftArabic('f_but','f_but_ar')">✨ AI Draft AR</button>
+            </div>
+            <div class="em" id="em-f_but">Requis</div>
+          </div>
+          <div class="fld">
+            <div class="fl">الغاية من المعالجة <span class="tag tar">AR</span></div>
+            <input type="text" dir="rtl" id="f_but_ar" maxlength="200" oninput="live(this,'but_ar')">
+          </div>
+          <div class="fld">
+            <div class="fl">Cadre légal</div>
+            <input type="text" id="f_cadre" maxlength="200">
+          </div>
+          <div class="fld">
+            <div class="fl">الإطار القانوني <span class="tag tar">AR</span></div>
+            <input type="text" dir="rtl" id="f_cadre_ar" maxlength="200">
+          </div>
+        </div>
+      </div>
+      <div class="blk">
+        <div class="bt">Catégories des traitements</div>
+        <div class="pg" id="pg-cat_trait">
+          <label class="po" onclick="tck(this,'cat_trait','Gestion du Personnel')"><div class="ps"></div>Gestion du Personnel</label>
+          <label class="po" onclick="tck(this,'cat_trait','Comptabilité')"><div class="ps"></div>Comptabilité</label>
+          <label class="po" onclick="tck(this,'cat_trait','Service public')"><div class="ps"></div>Service public</label>
+          <label class="po" onclick="tck(this,'cat_trait','Gestion des Patients')"><div class="ps"></div>Gestion des Patients</label>
+          <label class="po" onclick="tck(this,'cat_trait','Étudiants/Élèves')"><div class="ps"></div>Étudiants/Élèves</label>
+          <label class="po" onclick="tck(this,'cat_trait','Gestion des Fournisseurs')"><div class="ps"></div>Gestion des Fournisseurs</label>
+          <label class="po" onclick="tck(this,'cat_trait','Gestion des Clients')"><div class="ps"></div>Gestion des Clients</label>
+          <label class="po" onclick="tck(this,'cat_trait','Autres')"><div class="ps"></div>Autres</label>
+        </div>
+        <div class="em" id="em-cat_trait">Sélectionnez au moins une catégorie</div>
+        <div id="div-autre-cat" style="display:none;margin-top:10px">
+          <div class="fld"><div class="fl">Précisez</div><input type="text" id="f_autre_cat" maxlength="200"></div>
+        </div>
+      </div>
+      <div class="blk">
+        <div class="bt">Sous-traitements</div>
+        <div class="g g2">
+          <div class="fld">
+            <div class="fl">Existence de sous traitements <span class="req">*</span></div>
+            <div class="pg" id="pg-ext_trait">
+              <label class="po" onclick="selR('ext_trait','Oui',this)"><div class="pd"></div>Oui</label>
+              <label class="po" onclick="selR('ext_trait','Non',this)"><div class="pd"></div>Non</label>
+            </div>
+            <div class="em" id="em-ext_trait">Champ obligatoire</div>
+          </div>
+          <div class="fld">
+            <div class="fl">Existence d'un sous traitant <span class="req">*</span></div>
+            <div class="pg" id="pg-ext_soustraitant">
+              <label class="po" onclick="selR('ext_soustraitant','Oui',this)"><div class="pd"></div>Oui</label>
+              <label class="po" onclick="selR('ext_soustraitant','Non',this)"><div class="pd"></div>Non</label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="nf"><button class="btn bp" onclick="nextS('s1','s2')">Suivant →</button></div>
+    </div>
+
+    <!-- Section 2: Sous-traitements -->
+    <div class="sec" id="s2">
+      <div class="sh"><div class="si">🔗</div><div><div class="st">Sous-traitements &amp; Sous-traitants</div><div class="ss">Section 1 suite</div></div></div>
+      <div id="st-c"></div>
+      <button class="ba" onclick="addST()">+ Ajouter un sous-traitement</button>
+      <div class="nf"><button class="btn bs" onclick="prevS('s2','s1')">← Précédent</button><button class="btn bp" onclick="nextS('s2','s3')">Suivant →</button></div>
+    </div>
+
+    <!-- Section 3: Données collectées -->
+    <div class="sec" id="s3">
+      <div class="sh"><div class="si">📥</div><div><div class="st">Données collectées</div><div class="ss">Section 2 — <span class="bdg bb">form_collect</span></div></div></div>
+      <div class="blk">
+        <div class="bt">Type &amp; Mode de collecte</div>
+        <div class="g g2">
+          <div class="fld">
+            <div class="fl">Type de collecte <span class="req">*</span></div>
+            <div class="pg" id="pg-type_collect">
+              <label class="po" onclick="selR('type_collect','Manuel',this);toggleModeC('Manuel')"><div class="pd"></div>Manuel</label>
+              <label class="po" onclick="selR('type_collect','Informatique',this);toggleModeC('Informatique')"><div class="pd"></div>Informatique</label>
+              <label class="po" onclick="selR('type_collect','Informatique et Manuel',this);toggleModeC('Informatique et Manuel')"><div class="pd"></div>Informatique &amp; Manuel</label>
+            </div>
+            <div class="em" id="em-type_collect">Champ obligatoire</div>
+          </div>
+          <div class="fld" id="fld-mode-c" style="opacity:0.4">
+            <div class="fl">Mode de collecte <span class="hint">(si info)</span></div>
+            <div class="pg" id="pg-mode_collect">
+              <label class="po" onclick="selR('mode_collect','Poste déconnecté',this)"><div class="pd"></div>Poste déconnecté</label>
+              <label class="po" onclick="selR('mode_collect','Intranet',this)"><div class="pd"></div>Intranet</label>
+              <label class="po" onclick="selR('mode_collect','Internet',this)"><div class="pd"></div>Internet</label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="blk">
+        <div class="bt">Personnes concernées</div>
+        <div class="pg" id="pg-cat_pers">
+          <label class="po" onclick="tck(this,'cat_pers','cat_salaries_collect')"><div class="ps"></div>Salariés</label>
+          <label class="po" onclick="tck(this,'cat_pers','cat_usages_collect')"><div class="ps"></div>Usagés</label>
+          <label class="po" onclick="tck(this,'cat_pers','cat_patients_collect')"><div class="ps"></div>Patients</label>
+          <label class="po" onclick="tck(this,'cat_pers','cat_fournisseurs_collect')"><div class="ps"></div>Fournisseurs</label>
+          <label class="po" onclick="tck(this,'cat_pers','cat_client_collect')"><div class="ps"></div>Clients</label>
+          <label class="po" onclick="tck(this,'cat_pers','cat_autre_collect')"><div class="ps"></div>Autres</label>
+        </div>
+      </div>
+      <div class="blk">
+        <div class="bt">Autres sources</div>
+        <div class="fld">
+          <div class="fl">Sources externes ?</div>
+          <div class="pg" id="pg-existautrecat">
+            <label class="po" onclick="selR('existautrecat','Oui',this);document.getElementById('div-autres-src').style.display='block'"><div class="pd"></div>Oui</label>
+            <label class="po" onclick="selR('existautrecat','Non',this);document.getElementById('div-autres-src').style.display='none'"><div class="pd"></div>Non</label>
+          </div>
+        </div>
+        <div id="div-autres-src" style="display:none;margin-top:12px">
+          <div class="g g2">
+            <div class="fld"><div class="fl">Nom BD/FM</div><input type="text" id="f_nombdfm" maxlength="200"></div>
+            <div class="fld"><div class="fl">Propriétaire</div><input type="text" id="f_nomproprio" maxlength="200"></div>
+          </div>
+        </div>
+      </div>
+      <div class="nf"><button class="btn bs" onclick="prevS('s3','s2')">← Précédent</button><button class="btn bp" onclick="nextS('s3','s4')">Suivant →</button></div>
+    </div>
+
+    <!-- Section 4: Catégories (Component) -->
+    {% include 'components/section_cat_table.html' %}
+
+    <!-- Section 5: Conservation (Component) -->
+    {% include 'components/section_conservation.html' %}
+
+    <!-- Section 6: Sécurité (Component) -->
+    {% include 'components/section_security.html' %}
+
+    <!-- Section 7: Interconnexion (Component) -->
+    {% include 'components/section_interconnexion.html' %}
+
+    <!-- Section 8: Transfert (Component) -->
+    {% include 'components/section_transfert.html' %}
+
+    <!-- Section 9: Consentement (Component) -->
+    {% include 'components/section_consent.html' %}
+
+    <!-- Section 10: Droits (Component) -->
+    {% include 'components/section_droits.html' %}
+
+    <!-- Export Panels (Component) -->
+    {% include 'components/export_panels.html' %}
+
+  </div><!-- /cnt -->
+</div><!-- /lay -->
+
+<!-- AI Assistant (Component) -->
+{% include 'components/ai_panel.html' %}
+
+<div class="toast" id="toast"><span id="tico">✓</span><span id="tmsg"></span></div>
+<input type="file" id="csv-in" accept=".csv" style="display:none" onchange="handleCSV(event)">
+
+<!-- Data & Modular Scripts -->
+<script id="traitement-data">
+  const COMPANY_ID = {{ company.id }};
+  const TRAITEMENT_ID = {{ traitement.id }};
+  const STATUS_URL = `/company/${COMPANY_ID}/traitement/${TRAITEMENT_ID}/status`;
+  const SAVE_URL = `/company/${COMPANY_ID}/traitement/${TRAITEMENT_ID}/save`;
+  const EXCEL_SERVER = `/company/${COMPANY_ID}/traitement/${TRAITEMENT_ID}/export/excel`;
+  const SEND_SERVER  = `/api/inject/traitement/${TRAITEMENT_ID}`;
+  const CHECK_SERVER = `/api/check_server`;
+  const INITIAL_DATA = {{ (traitement.data or {}) | tojson | safe }};
+  const TRAITEMENT_TYPE = "{{ traitement.traitement_type }}";
+</script>
+
+<script src="{{ url_for('static', filename='js/traitement_core.js') }}"></script>
+<script src="{{ url_for('static', filename='js/traitement_components.js') }}"></script>
+<script src="{{ url_for('static', filename='js/traitement_ai.js') }}"></script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    if (INITIAL_DATA && Object.keys(INITIAL_DATA).length) {
+      loadData(INITIAL_DATA);
+    }
+    // Periodic autosave
+    scheduleAutosave();
+    attachAutosave();
+  });
+</script>
+
+</body>
+</html>

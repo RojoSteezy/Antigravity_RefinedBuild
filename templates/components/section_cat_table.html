@@ -1,0 +1,69 @@
+<!-- Section 4: Catégories de données collectées et traitées -->
+<div class="sec" id="s4">
+  <div class="sh">
+    <div class="si">🗃️</div>
+    <div>
+      <div class="st">Catégories des données collectées et traitées</div>
+      <div class="ss">Section 3 — <span class="bdg bb">form_categorie</span></div>
+    </div>
+  </div>
+
+  <!-- TOOLBAR -->
+  <div class="cat-toolbar" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px">
+    <button class="btn bp" onclick="catAddRow()" style="padding:7px 14px;font-size:12.5px">+ Ligne</button>
+    <button class="btn bs" onclick="catAddFromTemplate()" style="padding:7px 14px;font-size:12.5px">📋 Depuis modèle KB</button>
+    <div style="height:24px;width:1px;background:var(--bdr);margin:0 2px"></div>
+    <label class="btn bs" style="padding:7px 14px;font-size:12.5px;cursor:pointer">
+      📥 Importer Excel <input type="file" accept=".xlsx,.xls,.csv" style="display:none" onchange="catImportExcel(event)">
+    </label>
+    <button class="btn bs" onclick="catShowPaste()" style="padding:7px 14px;font-size:12.5px">📋 Coller depuis Excel</button>
+    <div style="margin-left:auto;font-size:11px;color:var(--tx3);font-family:'JetBrains Mono',monospace" id="cat-count">0 ligne(s)</div>
+  </div>
+
+  <!-- PASTE ZONE (hidden by default) -->
+  <div id="cat-paste-zone" style="display:none;margin-bottom:10px">
+    <div style="font-size:11.5px;color:var(--tx2);margin-bottom:6px">
+      Copiez les cellules depuis Excel (colonnes: Catégorie · Type · Autres types · Origine · Autres origines · Utilisée finalité · Sources · Autres sources · Durée mois) puis collez ici :
+    </div>
+    <textarea id="cat-paste-input" rows="5" style="width:100%;padding:10px;border:1.5px solid var(--bdr2);border-radius:7px;font-family:'JetBrains Mono',monospace;font-size:11.5px;resize:vertical;outline:none"
+      placeholder="Collez ici (Ctrl+V)..."></textarea>
+    <div style="display:flex;gap:8px;margin-top:6px">
+      <button class="btn bp" onclick="catParsePaste()" style="font-size:12px;padding:7px 14px">✓ Importer</button>
+      <button class="btn bs" onclick="document.getElementById('cat-paste-zone').style.display='none'" style="font-size:12px;padding:7px 14px">Annuler</button>
+    </div>
+  </div>
+
+  <!-- SPREADSHEET TABLE -->
+  <div class="cat-table-wrapper" style="overflow-x:auto;border:1px solid var(--bdr);border-radius:9px;background:var(--surf)">
+    <table id="cat-table" style="width:100%;border-collapse:collapse;min-width:900px">
+      <thead>
+        <tr style="background:var(--Gl)">
+          <th style="width:32px;padding:8px 6px;border-bottom:2px solid var(--G);border-right:1px solid var(--bdr);font-size:10px;color:var(--tx3);font-weight:600">#</th>
+          <th style="padding:8px 10px;border-bottom:2px solid var(--G);border-right:1px solid var(--bdr);font-size:10.5px;font-weight:700;color:var(--tx2);text-align:left;white-space:nowrap">Catégorie de données</th>
+          <th style="padding:8px 10px;border-bottom:2px solid var(--G);border-right:1px solid var(--bdr);font-size:10.5px;font-weight:700;color:var(--tx2);text-align:left;white-space:nowrap">Type d'informations</th>
+          <th style="padding:8px 10px;border-bottom:2px solid var(--G);border-right:1px solid var(--bdr);font-size:10.5px;font-weight:700;color:var(--tx2);text-align:left;white-space:nowrap">Autres types</th>
+          <th style="padding:8px 10px;border-bottom:2px solid var(--G);border-right:1px solid var(--bdr);font-size:10.5px;font-weight:700;color:var(--tx2);text-align:left;white-space:nowrap">Origine</th>
+          <th style="padding:8px 10px;border-bottom:2px solid var(--G);border-right:1px solid var(--bdr);font-size:10.5px;font-weight:700;color:var(--tx2);text-align:left;white-space:nowrap">Autres origines</th>
+          <th style="padding:8px 10px;border-bottom:2px solid var(--G);border-right:1px solid var(--bdr);font-size:10.5px;font-weight:700;color:var(--tx2);text-align:left;white-space:nowrap">Utilisée finalité ?</th>
+          <th style="padding:8px 10px;border-bottom:2px solid var(--G);border-right:1px solid var(--bdr);font-size:10.5px;font-weight:700;color:var(--tx2);text-align:left;white-space:nowrap">Sources</th>
+          <th style="padding:8px 10px;border-bottom:2px solid var(--G);border-right:1px solid var(--bdr);font-size:10.5px;font-weight:700;color:var(--tx2);text-align:left;white-space:nowrap">Autres sources</th>
+          <th style="padding:8px 10px;border-bottom:2px solid var(--G);border-right:1px solid var(--bdr);font-size:10.5px;font-weight:700;color:var(--tx2);text-align:left;white-space:nowrap">Durée (mois)</th>
+          <th style="width:32px;padding:8px 6px;border-bottom:2px solid var(--G);font-size:10px;color:var(--tx3)"></th>
+        </tr>
+      </thead>
+      <tbody id="cat-tbody"></tbody>
+    </table>
+  </div>
+
+  <!-- KB TEMPLATE PICKER (hidden by default) -->
+  <div id="cat-kb-picker" style="display:none;margin-top:10px;background:var(--surf2);border:1px solid var(--bdr2);border-radius:9px;padding:14px">
+    <div style="font-size:12px;font-weight:700;color:var(--tx2);margin-bottom:10px">📋 Choisir un modèle KB à insérer comme ligne :</div>
+    <div id="cat-kb-list" style="display:flex;flex-wrap:wrap;gap:6px"></div>
+    <button class="btn bs" onclick="document.getElementById('cat-kb-picker').style.display='none'" style="margin-top:10px;font-size:11.5px;padding:5px 12px">Fermer</button>
+  </div>
+
+  <div class="nf">
+    <button class="btn bs" onclick="prevS('s4','s3')">← Précédent</button>
+    <button class="btn bp" onclick="nextS('s4','s5')">Suivant →</button>
+  </div>
+</div>

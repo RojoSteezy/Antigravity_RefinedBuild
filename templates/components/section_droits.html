@@ -1,0 +1,64 @@
+<div class="sec" id="s10">
+  <div class="sh"><div class="si">⚖️</div><div><div class="st">Droits des personnes concernées</div><div class="ss">Section 9 — Art.32, 34, 35, 36 · <span class="bdg bb">form_droits_personnes</span></div></div></div>
+  <div class="blk">
+    <div class="g g2">
+      <div class="fld">
+        <div class="fl">Comment les personnes sont informées ? <span class="tag tlm">3–200 car.</span></div>
+        <div style="position:relative">
+          <input type="text" id="f_dr_com" maxlength="200" placeholder="ex: Note de consentement...">
+          <button class="ai-draft-btn" onclick="draftArabic('f_dr_com','f_dr_com_ar')">✨ AI Draft AR</button>
+        </div>
+      </div>
+      <div class="fld">
+        <div class="fl">كيف يتم ذلك؟ <span class="tag tar">AR</span></div>
+        <input type="text" dir="rtl" id="f_dr_com_ar" maxlength="200">
+      </div>
+      <div class="fld s2">
+        <div class="fl">Nom du service pour exercer les droits <span class="tag tlm">3–200 car.</span></div>
+        <div style="position:relative">
+          <input type="text" id="f_dr_svc" maxlength="200" placeholder="ex: Délégué à la Protection des Données (DPD)">
+          <button class="ai-draft-btn" onclick="draftArabic('f_dr_svc','f_dr_svc_ar')">✨ AI Draft AR</button>
+        </div>
+      </div>
+      <div class="fld s2">
+        <div class="fl">اسم المصلحة <span class="tag tar">AR</span></div>
+        <input type="text" dir="rtl" id="f_dr_svc_ar" maxlength="200">
+      </div>
+      <div class="fld">
+        <div class="fl">Adresse <span class="tag tlm">3–200 car.</span></div>
+        <div style="position:relative">
+          <input type="text" id="f_dr_adr" maxlength="200">
+          <button class="ai-draft-btn" onclick="draftArabic('f_dr_adr','f_dr_adr_ar')">✨ AI Draft AR</button>
+        </div>
+      </div>
+      <div class="fld">
+        <div class="fl">العنوان <span class="tag tar">AR</span></div>
+        <input type="text" dir="rtl" id="f_dr_adr_ar" maxlength="200">
+      </div>
+      <div class="fld">
+        <div class="fl">Mobile <span class="tag tlm">10 chiffres</span></div>
+        <input type="tel" id="f_dr_tel" maxlength="10" placeholder="0555XXXXXX" oninput="this.value=this.value.replace(/\D/g,'')">
+      </div>
+      <div class="fld">
+        <div class="fl">Fax <span class="tag tlm">9 chiffres</span></div>
+        <input type="tel" id="f_dr_fax" maxlength="9" placeholder="020XXXXXX" oninput="this.value=this.value.replace(/\D/g,'')">
+      </div>
+      <div class="fld s2">
+        <div class="fl">e-Mail</div>
+        <input type="email" id="f_dr_email" maxlength="200">
+      </div>
+      <div class="fld">
+        <div class="fl">Mesures pour faciliter les droits <span class="tag tlm">3–200 car.</span></div>
+        <div style="position:relative">
+          <input type="text" id="f_dr_mes" maxlength="200">
+          <button class="ai-draft-btn" onclick="draftArabic('f_dr_mes','f_dr_mes_ar')">✨ AI Draft AR</button>
+        </div>
+      </div>
+      <div class="fld">
+        <div class="fl">التدابير <span class="tag tar">AR</span></div>
+        <input type="text" dir="rtl" id="f_dr_mes_ar" maxlength="200">
+      </div>
+    </div>
+  </div>
+  <div class="nf"><button class="btn bs" onclick="prevS('s10','s9')">← Précédent</button><button class="btn bp" onclick="nextS('s10','exp')">Exporter →</button></div>
+</div>

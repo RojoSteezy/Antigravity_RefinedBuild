@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{ company.name }} — KeyStone ANPDP</title>
+<link rel="icon" type="image/png" href="https://www.keystone.tn/wp-content/uploads/2019/05/88-1.png">
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&family=Barlow+Condensed:wght@700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Barlow',sans-serif;background:#252525;color:#e0e0e0;min-height:100vh}
+.topbar{background:#1c1c1c;border-bottom:1px solid #2e2e2e;padding:0 28px;height:52px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.topbar::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,#E8112D 30%,#E8112D 70%,transparent);opacity:.35}
+.brand{display:flex;align-items:center;gap:10px}
+.tright{display:flex;align-items:center;gap:8px}
+.tbtn{font-size:11px;font-family:'JetBrains Mono',monospace;padding:5px 12px;border-radius:2px;text-decoration:none;font-weight:500;transition:all .15s;cursor:pointer;border:none;font-family:'JetBrains Mono',monospace}
+.tbtn-back{color:#555;border:1px solid #333333;background:transparent}.tbtn-back:hover{color:#888;border-color:#333}
+.tbtn-red{color:#E8112D;border:1px solid rgba(232,17,45,.3);background:rgba(232,17,45,.06)}.tbtn-red:hover{background:rgba(232,17,45,.14)}
+.tbtn-green{color:#21a366;border:1px solid rgba(33,163,102,.3);background:rgba(33,163,102,.06);text-decoration:none}.tbtn-green:hover{background:rgba(33,163,102,.14)}
+.tbtn-del{color:#E8112D;border:1px solid rgba(232,17,45,.4);background:rgba(232,17,45,.08)}.tbtn-del:hover{color:#fff;background:#E8112D;border-color:#E8112D}
+.main{max-width:1100px;margin:0 auto;padding:24px 28px}
+
+/* Company header */
+.co-hdr{background:#1c1c1c;border:1px solid #2e2e2e;border-top:2px solid #E8112D;padding:20px 24px;margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.co-hdr-name{font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:900;color:#fff;text-transform:uppercase;letter-spacing:.03em}
+.co-hdr-nit{font-size:10px;font-family:'JetBrains Mono',monospace;color:#666;margin-top:3px}
+.co-hdr-acts{display:flex;gap:8px;flex-wrap:wrap}
+
+/* New traitement */
+.new-t{background:#1c1c1c;border:1px solid #2e2e2e;padding:12px 18px;margin-bottom:20px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.new-t-lbl{font-size:9px;font-family:'JetBrains Mono',monospace;color:#E8112D;letter-spacing:.14em;text-transform:uppercase;font-weight:600;white-space:nowrap}
+.new-t input,.new-t select{flex:1;min-width:150px;padding:8px 11px;background:#252525;border:1px solid #333333;color:#e0e0e0;font-family:'Barlow',sans-serif;font-size:12.5px;border-radius:2px;outline:none;transition:border-color .15s}
+.new-t input:focus,.new-t select:focus{border-color:#E8112D}
+.new-t input::placeholder{color:#555}
+.new-t select option{background:#111}
+.btn-add{padding:8px 18px;background:#E8112D;border:none;color:#fff;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;border-radius:2px;white-space:nowrap;transition:background .15s;flex-shrink:0}
+.btn-add:hover{background:#ff1f3a}
+
+/* KANBAN */
+.kanban{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.col{background:#1c1c1c;border:1px solid #2e2e2e;border-radius:2px;overflow:hidden}
+.col-hdr{padding:10px 14px;border-bottom:1px solid #252525;display:flex;align-items:center;justify-content:space-between}
+.col-title{font-size:9.5px;font-weight:700;font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:.1em}
+.col-count{font-size:9.5px;font-family:'JetBrains Mono',monospace;padding:1px 7px;border-radius:1px;font-weight:700}
+.col-body{padding:8px}
+.t-card{background:#222;border:1px solid #333333;padding:10px 12px;margin-bottom:6px;position:relative;overflow:hidden;transition:background .12s}
+.t-card:last-child{margin-bottom:0}
+.t-card:hover{background:#2a2a2a}
+.t-card-accent{position:absolute;left:0;top:0;bottom:0;width:2px}
+.t-card-name{font-size:12.5px;font-weight:600;color:#d0d0d0;margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.t-card-date{font-size:9px;font-family:'JetBrains Mono',monospace;color:#555;margin-bottom:8px}
+.t-card-acts{display:flex;gap:5px}
+.t-btn{font-size:9.5px;font-family:'JetBrains Mono',monospace;padding:3px 9px;border-radius:1px;cursor:pointer;border:none;font-weight:600;text-decoration:none;transition:all .12s;white-space:nowrap}
+.t-open{background:#E8112D;color:#fff}.t-open:hover{background:#ff1f3a}
+.t-clone{background:transparent;color:#777;border:1px solid #333333}.t-clone:hover{color:#E8112D;border-color:rgba(232,17,45,.3)}
+.t-del{background:transparent;color:#555;border:1px solid #252525}.t-del:hover{color:#E8112D;border-color:rgba(232,17,45,.2)}
+
+.col-empty{padding:20px;text-align:center;font-size:9.5px;color:#333333;font-family:'JetBrains Mono',monospace}
+
+/* Modal */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:200;align-items:center;justify-content:center}
+.modal-bg.open{display:flex}
+.modal{background:#222;border:1px solid #333333;border-top:1px solid #E8112D;padding:26px;width:380px}
+.modal h3{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:900;color:#fff;letter-spacing:.04em;margin-bottom:16px;text-transform:uppercase}
+.modal label{display:block;font-size:9px;font-weight:700;color:#444;letter-spacing:.14em;text-transform:uppercase;font-family:'JetBrains Mono',monospace;margin-bottom:5px;margin-top:12px}
+.modal input,.modal select{width:100%;padding:9px 11px;background:#252525;border:1px solid #333333;color:#e0e0e0;font-family:'Barlow',sans-serif;font-size:13px;border-radius:2px;outline:none;transition:border-color .15s}
+.modal input:focus,.modal select:focus{border-color:#E8112D}
+.modal select option{background:#111}
+.modal-footer{display:flex;gap:8px;margin-top:18px;justify-content:flex-end}
+.logo-hover-overlay{position:absolute;inset:0;background:rgba(232,17,45,.2);opacity:0;transition:opacity .15s;border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:14px;color:#E8112D;pointer-events:none}
+div:hover > .logo-hover-overlay{opacity:1}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="brand">
+    <a href="/"><img src="https://www.keystone.tn/wp-content/uploads/2019/05/Key-W-logo.png" alt="KeyStone" style="height:44px;width:auto;display:block"></a>
+  </div>
+  <div class="tright">
+    <a href="/" class="tbtn tbtn-back">← Hub</a>
+    <a href="/logout" class="tbtn tbtn-back">Déconnexion</a>
+  </div>
+</div>
+
+<div class="main">
+  <!-- Company header -->
+  <div class="co-hdr">
+    <div style="display:flex;align-items:center;gap:14px">
+      <!-- Logo: click to open logo modal -->
+      <div style="position:relative;cursor:pointer;flex-shrink:0" onclick="document.getElementById('logo-modal').classList.add('open')" title="Changer le logo">
+        {% if company.logo_path %}
+        <img src="{{ company.logo_path }}" alt="{{ company.name }}" style="width:52px;height:52px;object-fit:contain;background:#2a2a2a;border:1px solid #333333;border-radius:2px;padding:3px;display:block">
+        {% else %}
+        <div style="width:52px;height:52px;background:#2a2a2a;border:1px dashed #2a2a2a;border-radius:2px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:2px">
+          <div style="font-size:20px;color:#666;line-height:1">+</div>
+          <div style="font-size:7px;color:#555;font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:.06em">Logo</div>
+        </div>
+        {% endif %}
+        <div class="logo-hover-overlay">✏</div>
+      </div>
+      <div>
+        <div class="co-hdr-name">{{ company.name }}</div>
+        <div class="co-hdr-nit">NIT · {{ company.nit }} · {{ traitements|length }} traitement{% if traitements|length!=1 %}s{% endif %}</div>
+      </div>
+    </div>
+    <div class="co-hdr-acts">
+      <a href="/company/{{ company.id }}/export/excel" class="tbtn tbtn-green">📊 Export Excel</a>
+      <a href="/company/{{ company.id }}/import" class="tbtn tbtn-green">📥 Importer Excel</a>
+      <a href="/company/{{ company.id }}/inject/all" class="tbtn tbtn-red">🚀 Envoyer ANPDP</a>
+      <a href="/company/{{ company.id }}/clone" class="tbtn tbtn-red">⧉ Cloner vers...</a>
+      <button class="tbtn tbtn-red" onclick="document.getElementById('edit-modal').classList.add('open')">✏ Modifier</button>
+      <form action="/company/{{ company.id }}/delete" method="POST" style="margin:0" onsubmit="return confirm('Supprimer {{ company.name }} et tous ses traitements ?')">
+        <button type="submit" class="tbtn tbtn-del">🗑</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- New traitement -->
+  <form action="/company/{{ company.id }}/traitement/new" method="POST" class="new-t">
+    <div class="new-t-lbl">+ Traitement</div>
+    <input type="text" name="name" placeholder="Nom du traitement (ex: Gestion RH)" required>
+    <select name="traitement_type">
+      <option value="">— Sans modèle KB —</option>
+      {% for kt in kb_types %}
+      <option value="{{ kt.id }}">{{ kt.icon }} {{ kt.name }}</option>
+      {% endfor %}
+    </select>
+    <button type="submit" class="btn-add">Créer →</button>
+  </form>
+
+  <!-- KANBAN BOARD -->
+  <div class="kanban">
+
+    <!-- BROUILLONS -->
+    <div class="col">
+      <div class="col-hdr" style="border-top:2px solid #7a5500">
+        <span class="col-title" style="color:#7a5500">Brouillons</span>
+        <span class="col-count" style="background:rgba(90,64,0,.12);color:#7a5500">{{ traitements|selectattr('status','eq','brouillon')|list|length }}</span>
+      </div>
+      <div class="col-body">
+        {% set brouillons = traitements|selectattr('status','eq','brouillon')|list %}
+        {% if brouillons %}
+          {% for t in brouillons %}
+          <div class="t-card">
+            <div class="t-card-accent" style="background:#7a5500"></div>
+            <div class="t-card-name" style="padding-left:8px">{{ t.name }}</div>
+            <div class="t-card-date" style="padding-left:8px">{{ t.updated_at.strftime('%d/%m/%Y') }}</div>
+            <div class="t-card-acts" style="padding-left:8px">
+              <a href="/company/{{ company.id }}/traitement/{{ t.id }}" class="t-btn t-open">Ouvrir</a>
+              <button class="t-btn t-clone" onclick="openCloneModal({{ t.id }},'{{ t.name }}')">⧉</button>
+              <form action="/company/{{ company.id }}/traitement/{{ t.id }}/delete" method="POST" style="margin:0" onsubmit="return confirm('Supprimer ?')">
+                <button type="submit" class="t-btn t-del">✕</button>
+              </form>
+            </div>
+          </div>
+          {% endfor %}
+        {% else %}
+          <div class="col-empty">Aucun brouillon</div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- PRÊTS -->
+    <div class="col">
+      <div class="col-hdr" style="border-top:2px solid #1a5fa0">
+        <span class="col-title" style="color:#1a5fa0">Prêts</span>
+        <span class="col-count" style="background:rgba(0,58,122,.12);color:#1a5fa0">{{ traitements|selectattr('status','eq','pret')|list|length }}</span>
+      </div>
+      <div class="col-body">
+        {% set prets = traitements|selectattr('status','eq','pret')|list %}
+        {% if prets %}
+          {% for t in prets %}
+          <div class="t-card">
+            <div class="t-card-accent" style="background:#1a5fa0"></div>
+            <div class="t-card-name" style="padding-left:8px">{{ t.name }}</div>
+            <div class="t-card-date" style="padding-left:8px">{{ t.updated_at.strftime('%d/%m/%Y') }}</div>
+            <div class="t-card-acts" style="padding-left:8px">
+              <a href="/company/{{ company.id }}/traitement/{{ t.id }}" class="t-btn t-open">Ouvrir</a>
+              <button class="t-btn t-clone" onclick="openCloneModal({{ t.id }},'{{ t.name }}')">⧉</button>
+              <form action="/company/{{ company.id }}/traitement/{{ t.id }}/delete" method="POST" style="margin:0" onsubmit="return confirm('Supprimer ?')">
+                <button type="submit" class="t-btn t-del">✕</button>
+              </form>
+            </div>
+          </div>
+          {% endfor %}
+        {% else %}
+          <div class="col-empty">Aucun traitement prêt</div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- SOUMIS -->
+    <div class="col">
+      <div class="col-hdr" style="border-top:2px solid #E8112D">
+        <span class="col-title" style="color:#E8112D">Soumis</span>
+        <span class="col-count" style="background:rgba(232,17,45,.1);color:#E8112D">{{ traitements|selectattr('status','eq','soumis')|list|length }}</span>
+      </div>
+      <div class="col-body">
+        {% set soumis = traitements|selectattr('status','eq','soumis')|list %}
+        {% if soumis %}
+          {% for t in soumis %}
+          <div class="t-card">
+            <div class="t-card-accent" style="background:#E8112D"></div>
+            <div class="t-card-name" style="padding-left:8px">{{ t.name }}</div>
+            <div class="t-card-date" style="padding-left:8px">{{ t.updated_at.strftime('%d/%m/%Y') }}</div>
+            <div class="t-card-acts" style="padding-left:8px">
+              <a href="/company/{{ company.id }}/traitement/{{ t.id }}" class="t-btn t-open">Ouvrir</a>
+              <button class="t-btn t-clone" onclick="openCloneModal({{ t.id }},'{{ t.name }}')">⧉</button>
+              <form action="/company/{{ company.id }}/traitement/{{ t.id }}/delete" method="POST" style="margin:0" onsubmit="return confirm('Supprimer ?')">
+                <button type="submit" class="t-btn t-del">✕</button>
+              </form>
+            </div>
+          </div>
+          {% endfor %}
+        {% else %}
+          <div class="col-empty">Aucun traitement soumis</div>
+        {% endif %}
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Edit modal -->
+<div class="modal-bg" id="edit-modal" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="modal">
+    <h3>Modifier la société</h3>
+    <form action="/company/{{ company.id }}/edit" method="POST">
+      <label>Nom</label><input type="text" name="name" value="{{ company.name }}" required>
+      <label>NIT</label><input type="text" name="nit" value="{{ company.nit }}" required>
+      <div class="modal-footer">
+        <button type="button" class="tbtn tbtn-back" onclick="document.getElementById('edit-modal').classList.remove('open')">Annuler</button>
+        <button type="submit" class="btn-add" style="padding:8px 16px">Enregistrer</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Clone single traitement modal -->
+<div class="modal-bg" id="clone-modal" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="modal">
+    <h3>Cloner ce traitement</h3>
+    <p id="clone-t-name" style="font-size:11px;color:#444;font-family:'JetBrains Mono',monospace;margin-bottom:4px"></p>
+    <label>Société de destination</label>
+    <select id="clone-target-sel">
+      <option value="">— Choisir —</option>
+      {% for c in all_companies %}{% if c.id != company.id %}
+      <option value="{{ c.id }}">{{ c.name }}</option>
+      {% endif %}{% endfor %}
+    </select>
+    <div style="font-size:9.5px;color:#666;font-family:'JetBrains Mono',monospace;margin-top:8px;line-height:1.6">Champs vidés : conservation, adresse, contacts droits · Statut → Brouillon</div>
+    <div class="modal-footer">
+      <button type="button" class="tbtn tbtn-back" onclick="document.getElementById('clone-modal').classList.remove('open')">Annuler</button>
+      <button type="button" class="btn-add" style="padding:8px 16px" onclick="doClone()">⧉ Cloner</button>
+    </div>
+  </div>
+</div>
+
+<!-- Logo modal -->
+<div class="modal-bg" id="logo-modal" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="modal">
+    <h3>Logo de la société</h3>
+    {% if company.logo_path %}
+    <div style="text-align:center;padding:12px 0;margin-bottom:12px;background:#252525;border:1px solid #2e2e2e;border-radius:2px">
+      <img src="{{ company.logo_path }}" style="max-height:60px;max-width:180px;object-fit:contain">
+    </div>
+    {% endif %}
+
+    <!-- Upload file -->
+    <form action="/company/{{ company.id }}/logo" method="POST" enctype="multipart/form-data">
+      <label>Importer un fichier (PNG, JPG, SVG)</label>
+      <div style="display:flex;gap:8px;margin-top:6px">
+        <input type="file" name="logo_file" accept=".png,.jpg,.jpeg,.gif,.webp,.svg" style="flex:1;padding:8px;background:#252525;border:1px solid #333333;color:#888;font-size:11px;border-radius:2px;outline:none">
+        <button type="submit" class="btn-add" style="padding:8px 14px;font-size:12px">↑ Upload</button>
+      </div>
+    </form>
+
+    <!-- URL -->
+    <form action="/company/{{ company.id }}/logo" method="POST" style="margin-top:14px">
+      <label>Ou coller une URL</label>
+      <div style="display:flex;gap:8px;margin-top:6px">
+        <input type="url" name="logo_url" placeholder="https://..." style="flex:1;padding:8px 10px;background:#252525;border:1px solid #333333;color:#e0e0e0;font-family:'Barlow',sans-serif;font-size:12.5px;border-radius:2px;outline:none">
+        <button type="submit" class="btn-add" style="padding:8px 14px;font-size:12px">OK</button>
+      </div>
+    </form>
+
+    {% if company.logo_path %}
+    <form action="/company/{{ company.id }}/logo/delete" method="POST" style="margin-top:12px">
+      <button type="submit" class="tbtn tbtn-del" style="font-size:11px;padding:5px 12px">🗑 Supprimer le logo</button>
+    </form>
+    {% endif %}
+
+    <div class="modal-footer" style="margin-top:14px">
+      <button type="button" class="tbtn tbtn-back" onclick="document.getElementById('logo-modal').classList.remove('open')">Fermer</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+let _cloneTid=null;
+function openCloneModal(tid,name){_cloneTid=tid;document.getElementById('clone-t-name').textContent='→ '+name;document.getElementById('clone-target-sel').value='';document.getElementById('clone-modal').classList.add('open');}
+async function doClone(){
+  const target=document.getElementById('clone-target-sel').value;
+  if(!target){alert('Choisissez une société.');return;}
+  const r=await fetch(`/company/{{ company.id }}/traitement/${_cloneTid}/clone`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({target_company_id:parseInt(target)})});
+  const j=await r.json();
+  document.getElementById('clone-modal').classList.remove('open');
+  if(j.ok){const name=document.getElementById('clone-target-sel').selectedOptions[0].text;showToast('✓ Cloné vers '+name);}
+}
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.style.display='block';setTimeout(()=>t.style.display='none',3000);}
+</script>
+</body>
+</html>

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/png" href="https://www.keystone.tn/wp-content/uploads/2019/05/88-1.png"><rect width='40' height='40' rx='2' fill='%23E8112D'/><path d='M9 9h5v10.5L22 9h7l-9 11.5L29 31h-7L9 20v11H4V9h5z' fill='white'/></svg>">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bibliothèque — KeyStone ANPDP</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&family=Barlow+Condensed:wght@700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Barlow',sans-serif;background:#252525;color:#e0e0e0;min-height:100vh}
+.topbar{position:relative;z-index:10;background:#1c1c1c;border-bottom:1px solid #2e2e2e;padding:0 28px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.topbar::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,#E8112D 30%,#E8112D 70%,transparent);opacity:.35}
+.brand{display:flex;align-items:center;gap:10px}
+.brand-name{font-family:'Barlow Condensed',sans-serif;font-size:19px;font-weight:900;color:#fff;letter-spacing:.04em}
+.brand-name span{color:#E8112D}
+.tbtn{font-size:11px;font-family:'JetBrains Mono',monospace;padding:5px 12px;border-radius:2px;text-decoration:none;font-weight:500;color:#555;border:1px solid #333333;transition:all .15s}
+.tbtn:hover{color:#888;border-color:#333}
+.main{position:relative;z-index:1;max-width:1000px;margin:0 auto;padding:28px}
+.page-hdr{margin-bottom:28px}
+.page-tag{font-size:9.5px;font-family:'JetBrains Mono',monospace;color:#E8112D;letter-spacing:.16em;text-transform:uppercase;margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.page-tag::before{content:'';width:16px;height:1px;background:#E8112D}
+.page-title{font-family:'Barlow Condensed',sans-serif;font-size:32px;font-weight:900;color:#fff;text-transform:uppercase;letter-spacing:.03em}
+.page-title span{color:#E8112D}
+
+/* Pending */
+.pending-sec{background:#1c1c1c;border:1px solid rgba(232,17,45,.2);border-radius:2px;padding:18px 22px;margin-bottom:24px}
+.pending-title{font-size:10px;font-family:'JetBrains Mono',monospace;color:#E8112D;letter-spacing:.14em;text-transform:uppercase;margin-bottom:12px;font-weight:700}
+.pending-list{display:flex;flex-direction:column;gap:6px}
+.pi{background:#252525;border:1px solid #2e2e2e;border-radius:2px;padding:9px 14px;display:flex;align-items:center;gap:10px}
+.pi-type{font-size:9.5px;background:rgba(232,17,45,.08);color:#E8112D;padding:2px 7px;border-radius:1px;font-family:'JetBrains Mono',monospace;font-weight:700;white-space:nowrap}
+.pi-field{font-size:10px;color:#777;font-family:'JetBrains Mono',monospace;white-space:nowrap}
+.pi-val{flex:1;font-size:12px;color:#888;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.btn-ok{padding:4px 10px;background:#E8112D;color:#fff;border:none;border-radius:1px;font-size:10px;font-weight:700;cursor:pointer;font-family:'JetBrains Mono',monospace}
+.btn-no{padding:4px 10px;background:transparent;color:#777;border:1px solid #333333;border-radius:1px;font-size:10px;cursor:pointer;font-family:'JetBrains Mono',monospace}
+.btn-no:hover{color:#E8112D;border-color:rgba(232,17,45,.3)}
+
+/* New type form */
+.new-form{background:#1c1c1c;border:1px solid #2e2e2e;border-radius:2px;padding:16px 20px;margin-bottom:24px;display:flex;gap:10px;align-items:flex-end}
+.new-form .fl{flex-shrink:0}
+.new-form label{display:block;font-size:9.5px;font-weight:700;color:#444;letter-spacing:.12em;text-transform:uppercase;font-family:'JetBrains Mono',monospace;margin-bottom:6px}
+.new-form input{padding:9px 12px;background:#252525;border:1px solid #333333;color:#e0e0e0;font-family:'Barlow',sans-serif;font-size:13px;border-radius:2px;outline:none;transition:border-color .15s}
+.new-form input:focus{border-color:#E8112D}
+.new-form input[name=name]{flex:1;min-width:200px}
+.new-form input[name=icon]{width:70px}
+.btn-create{padding:9px 20px;background:#E8112D;border:none;color:#fff;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;border-radius:2px;white-space:nowrap;align-self:flex-end}
+.btn-create:hover{background:#ff1f3a}
+
+/* Grid */
+.sec-lbl{font-size:9.5px;font-family:'JetBrains Mono',monospace;color:#666;letter-spacing:.16em;text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:10px}
+.sec-lbl::after{content:'';flex:1;height:1px;background:#252525}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1px;background:#252525;border:1px solid #252525;border-radius:2px;overflow:hidden}
+.type-card{background:#1c1c1c;padding:20px 22px;text-decoration:none;color:inherit;display:block;transition:background .12s;position:relative}
+.type-card:hover{background:#111}
+.type-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:#E8112D;transform:scaleY(0);transition:transform .2s;transform-origin:bottom}
+.type-card:hover::before{transform:scaleY(1)}
+.tc-top{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.tc-icon{font-size:18px;width:34px;height:34px;background:#252525;border-radius:2px;display:flex;align-items:center;justify-content:center}
+.tc-name{font-size:13.5px;font-weight:700;color:#d0d0d0}
+.tc-count{font-size:10px;font-family:'JetBrains Mono',monospace;color:#333}
+.tc-bar{height:1px;background:#252525;overflow:hidden;border-radius:1px;margin-top:8px}
+.tc-fill{height:100%;background:#E8112D}
+.empty{text-align:center;padding:60px 20px;color:#333333}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="brand">
+    <a href="/"><img src="https://www.keystone.tn/wp-content/uploads/2019/05/Key-W-logo.png" alt="KeyStone" style="height:44px;width:auto;display:block"></a>
+    
+  </div>
+  <a href="/" class="tbtn">← Hub</a>
+</div>
+<div class="main">
+  <div class="page-hdr">
+    <div class="page-tag">Base de connaissances</div>
+    <div class="page-title">Bibliothèque <span>·</span></div>
+  </div>
+
+  {% if pending > 0 %}
+  <div class="pending-sec">
+    <div class="pending-title">⏳ {{ pending }} suggestion{% if pending>1 %}s{% endif %} en attente</div>
+    <div class="pending-list" id="pending-list"><div style="font-size:11px;color:#777;font-family:'JetBrains Mono',monospace">Chargement...</div></div>
+  </div>
+  {% endif %}
+
+  <form action="/kb/type/new" method="POST" class="new-form">
+    <div class="fl"><label>Icône</label><input type="text" name="icon" value="🗂" maxlength="4"></div>
+    <div style="flex:1"><label>Nom du type</label><input type="text" name="name" placeholder="ex: Gestion des Stocks" required></div>
+    <button type="submit" class="btn-create">+ Créer</button>
+  </form>
+
+  {% if types %}
+  <div class="sec-lbl">{{ types|length }} type{% if types|length!=1 %}s{% endif %}</div>
+  <div class="grid">
+    {% for t in types %}
+    <a href="/kb/type/{{ t.id }}" class="type-card">
+      <div class="tc-top">
+        <div class="tc-icon">{{ t.icon }}</div>
+        <div>
+          <div class="tc-name">{{ t.name }}</div>
+          <div class="tc-count">{{ t.entries|length }} suggestion{% if t.entries|length!=1 %}s{% endif %}</div>
+        </div>
+      </div>
+      <div class="tc-bar"><div class="tc-fill" style="width:{{ [t.entries|length*6,100]|min }}%"></div></div>
+    </a>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty"><div style="font-family:'Barlow Condensed',sans-serif;font-size:60px;font-weight:900;color:#111">0.</div><div style="font-size:11px;color:#555;font-family:'JetBrains Mono',monospace;margin-top:6px">Aucun type · Créez le premier ci-dessus</div></div>
+  {% endif %}
+</div>
+<script>
+{% if pending > 0 %}
+fetch('/api/kb/pending').then(r=>r.json()).then(items=>{
+  const list=document.getElementById('pending-list');
+  if(!items.length){list.innerHTML='<div style="font-size:11px;color:#777;font-family:JetBrains Mono,monospace">Aucune suggestion en attente.</div>';return;}
+  list.innerHTML=items.map(e=>`<div class="pi" id="pi-${e.id}"><span class="pi-type">${e.icon} ${e.type}</span><span class="pi-field">${e.field_key}</span><span class="pi-val">${e.value}</span><button class="btn-ok" onclick="ap(${e.id})">✓</button><button class="btn-no" onclick="rj(${e.id})">✕</button></div>`).join('');
+});
+async function ap(id){await fetch('/kb/entry/'+id+'/approve',{method:'POST'});document.getElementById('pi-'+id)?.remove();}
+async function rj(id){await fetch('/kb/entry/'+id+'/reject',{method:'POST'});document.getElementById('pi-'+id)?.remove();}
+{% endif %}
+</script>
+</body>
+</html>

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/png" href="https://www.keystone.tn/wp-content/uploads/2019/05/88-1.png">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>{{ kb_type.name }} — Bibliothèque ANPDP</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&family=Noto+Sans+Arabic:wght@400;600&family=JetBrains+Mono:wght@400;500&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:#f4f7f5;color:#1a2e26;min-height:100vh}
+.topbar{position:relative;z-index:10;background:#1c1c1c;border-bottom:1px solid #2e2e2e;padding:0 28px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.brand{display:flex;align-items:center;gap:11px}
+.logo{width:34px;height:34px;background:#6c47ff;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:16px}
+.brand-title{font-size:14px;font-weight:700;color:#fff}
+.brand-sub{font-size:10px;color:#444;font-family:'JetBrains Mono',monospace}
+.topbar-right{display:flex;align-items:center;gap:8px}
+a.back{font-size:12px;color:#4a6358;text-decoration:none;padding:6px 12px;border-radius:6px;border:1px solid #e2ece8}
+a.back:hover{color:#1a2e26}
+.btn{padding:7px 14px;border-radius:7px;border:none;cursor:pointer;font-family:inherit;font-size:12.5px;font-weight:600;display:inline-flex;align-items:center;gap:5px;text-decoration:none}
+.btn-danger{background:rgba(229,62,62,.08);color:#e53e3e;border:1px solid rgba(229,62,62,.2)}.btn-danger:hover{background:rgba(229,62,62,.15)}
+.btn-purple{background:#6c47ff;color:#fff}.btn-purple:hover{background:#5234e0}
+.main{position:relative;z-index:1;max-width:960px;margin:0 auto;padding:32px 24px}
+.page-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px}
+.page-title{font-size:20px;font-weight:700;display:flex;align-items:center;gap:10px}
+.page-sub{font-size:13px;color:#4a6358;margin-top:3px}
+
+/* Field keys reference */
+.field-ref{background:#fff;border:1px solid #e2ece8;border-radius:10px;padding:14px 18px;margin-bottom:20px}
+.field-ref-title{font-size:11px;font-weight:700;color:#4a6358;text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px}
+.fk-grid{display:flex;flex-wrap:wrap;gap:6px}
+.fk{font-size:10.5px;padding:3px 9px;border-radius:5px;background:#f4f7f5;color:#4a6358;font-family:'JetBrains Mono',monospace;cursor:pointer;border:1px solid #e2ece8}
+.fk:hover{background:#e2ece8;color:#1a2e26}
+
+/* Add form */
+.add-form{background:#fff;border:1.5px dashed #6c47ff;border-radius:12px;padding:16px 18px;margin-bottom:24px}
+.add-form h3{font-size:12px;font-weight:700;color:#6c47ff;margin-bottom:12px;text-transform:uppercase;letter-spacing:.06em}
+.fg{display:grid;grid-template-columns:1fr 1fr 2fr auto;gap:10px;align-items:end}
+.fg label{font-size:10.5px;font-weight:600;color:#4a6358;display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.04em}
+.fg input,.fg select{width:100%;padding:8px 10px;border:1.5px solid #c8ddd5;border-radius:7px;font-family:inherit;font-size:12.5px;outline:none}
+.fg input:focus,.fg select:focus{border-color:#6c47ff;box-shadow:0 0 0 3px rgba(108,71,255,.1)}
+.fg .btn-purple{align-self:flex-end;white-space:nowrap}
+
+/* Import */
+.import-row{display:flex;align-items:center;gap:10px;margin-bottom:20px;padding:12px 14px;background:#fff;border:1px solid #e2ece8;border-radius:9px;font-size:12.5px;color:#4a6358}
+.import-row input[type=file]{font-size:12px}
+
+/* Grouped entries */
+.field-group{margin-bottom:18px}
+.fg-header{display:flex;align-items:center;justify-content:space-between;padding:8px 14px;background:linear-gradient(135deg,rgba(108,71,255,.06),rgba(0,176,116,.04));border:1px solid rgba(108,71,255,.15);border-radius:8px 8px 0 0;font-size:12px;font-weight:700;color:#5234e0;font-family:'JetBrains Mono',monospace}
+.fg-count{font-size:10px;background:rgba(108,71,255,.1);padding:2px 7px;border-radius:4px}
+.entry-list{border:1px solid #e2ece8;border-top:none;border-radius:0 0 8px 8px;overflow:hidden}
+.entry{display:flex;align-items:center;gap:10px;padding:10px 14px;background:#fff;border-bottom:1px solid #f4f7f5;transition:background .1s}
+.entry:last-child{border-bottom:none}
+.entry:hover{background:#fafcfb}
+.entry.pending{background:rgba(217,119,6,.04)}
+.entry-val{flex:1;font-size:12.5px;color:#1a2e26;line-height:1.5}
+.entry-val.ar{font-family:'Noto Sans Arabic',sans-serif;direction:rtl;text-align:right}
+.entry-tag{font-size:9.5px;padding:2px 6px;border-radius:4px;font-weight:700;white-space:nowrap;font-family:'JetBrains Mono',monospace}
+.tag-ar{background:rgba(217,119,6,.08);color:#b45309}
+.tag-pending{background:rgba(217,119,6,.1);color:#b45309}
+.tag-ok{background:rgba(0,176,116,.1);color:#00B074}
+.btn-del{padding:4px 9px;background:transparent;color:#e53e3e;border:1px solid rgba(229,62,62,.2);border-radius:5px;font-size:11px;cursor:pointer;font-family:inherit;font-weight:600}
+.btn-del:hover{background:rgba(229,62,62,.08)}
+.btn-approve{padding:4px 9px;background:#00B074;color:#fff;border:none;border-radius:5px;font-size:11px;cursor:pointer;font-family:inherit;font-weight:600}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="brand">
+    <a href="/"><img src="https://www.keystone.tn/wp-content/uploads/2019/05/Key-W-logo.png" alt="KeyStone" style="height:44px;width:auto;display:block"></a>
+    <div>
+      <div class="brand-title">{{ kb_type.name }}</div>
+      <div class="brand-sub">Base de connaissances · {{ grouped|length }} champ{% if grouped|length!=1 %}s{% endif %}</div>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <a href="/kb" class="back">← Bibliothèque</a>
+    <form action="/kb/type/{{ kb_type.id }}/delete" method="POST"
+          onsubmit="return confirm('Supprimer ce type et toutes ses suggestions ?')">
+      <button type="submit" class="btn btn-danger">🗑 Supprimer</button>
+    </form>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- FIELD KEY REFERENCE -->
+  <div class="field-ref">
+    <div class="field-ref-title">Clés de champs disponibles (cliquez pour copier)</div>
+    <div class="fk-grid">
+      {% for fk in ['finalite','finalite_ar','cadre','cadre_ar','comment','comment_ar',
+                    'service_droits','service_droits_ar','adresse_droits','adresse_droits_ar',
+                    'mesures_droits','mesures_droits_ar','methode_consent','methode_consent_ar',
+                    'nom_bdd','lieu_bdd','nom_fm','lieu_fm'] %}
+      <span class="fk" onclick="copyFk('{{ fk }}')">{{ fk }}</span>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- IMPORT EXCEL -->
+  <form action="/kb/type/{{ kb_type.id }}/import" method="POST" enctype="multipart/form-data" class="import-row">
+    <span>📥 Importer depuis Excel</span>
+    <input type="file" name="file" accept=".xlsx,.xls">
+    <button type="submit" class="btn btn-purple" style="padding:6px 14px;font-size:12px">Importer</button>
+    <span style="font-size:11px;color:#8aab9c">Colonnes: field_key · value · label · arabic (0/1)</span>
+  </form>
+
+  <!-- ADD ENTRY -->
+  <div class="add-form">
+    <h3>+ Ajouter une suggestion</h3>
+    <form action="/kb/type/{{ kb_type.id }}/entry/add" method="POST">
+      <div class="fg">
+        <div>
+          <label>Clé du champ</label>
+          <input type="text" name="field_key" id="fk-input" placeholder="finalite" required>
+        </div>
+        <div>
+          <label>Libellé</label>
+          <input type="text" name="field_label" placeholder="Finalité (FR)">
+        </div>
+        <div>
+          <label>Valeur / Suggestion</label>
+          <input type="text" name="value" placeholder="Gérer les..." required>
+        </div>
+        <div>
+          <label>Arabe ?</label>
+          <select name="is_arabic">
+            <option value="0">Non</option>
+            <option value="1">Oui</option>
+          </select>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-purple" style="margin-top:10px">+ Ajouter</button>
+    </form>
+  </div>
+
+  <!-- ENTRIES BY FIELD -->
+  {% for field_key, entries in grouped.items()|sort %}
+  <div class="field-group">
+    <div class="fg-header">
+      {{ field_key }}
+      <span class="fg-count">{{ entries|length }}</span>
+    </div>
+    <div class="entry-list">
+      {% for e in entries %}
+      <div class="entry {% if not e.approved %}pending{% endif %}">
+        {% if e.is_arabic %}
+        <span class="entry-tag tag-ar">AR</span>
+        {% endif %}
+        {% if not e.approved %}
+        <span class="entry-tag tag-pending">⏳ En attente</span>
+        {% else %}
+        <span class="entry-tag tag-ok">✓</span>
+        {% endif %}
+        <span class="entry-val {% if e.is_arabic %}ar{% endif %}">{{ e.value }}</span>
+        {% if not e.approved %}
+        <button class="btn-approve" onclick="approveEntry({{ e.id }}, this)">✓ Valider</button>
+        {% endif %}
+        <form action="/kb/entry/{{ e.id }}/delete" method="POST" style="margin:0"
+              onsubmit="return confirm('Supprimer cette suggestion ?')">
+          <button type="submit" class="btn-del">✕</button>
+        </form>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endfor %}
+
+  {% if not grouped %}
+  <div style="text-align:center;padding:40px;color:#8aab9c">
+    <p>Aucune suggestion encore. Ajoutez-en une ci-dessus ou importez depuis Excel.</p>
+  </div>
+  {% endif %}
+</div>
+
+<script>
+function copyFk(val){
+  navigator.clipboard.writeText(val);
+  document.getElementById('fk-input').value = val;
+  document.getElementById('fk-input').focus();
+}
+async function approveEntry(id, btn){
+  await fetch('/kb/entry/'+id+'/approve',{method:'POST'});
+  btn.closest('.entry').classList.remove('pending');
+  btn.closest('.entry').querySelector('.tag-pending').outerHTML='<span class="entry-tag tag-ok">✓</span>';
+  btn.remove();
+}
+</script>
+</body>
+</html>
